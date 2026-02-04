@@ -60,6 +60,80 @@ void insertion_sort(int arr[], int length) {
     
 }
 
+void merge(int arr[], int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    int L[n1], R[n2];
+
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+
+    int i = 0, j = 0, k = left;
+
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j])
+            arr[k++] = L[i++];
+        else
+            arr[k++] = R[j++];
+    }
+
+    while (i < n1)
+        arr[k++] = L[i++];
+
+    while (j < n2)
+        arr[k++] = R[j++];
+}
+
+void mergeSortHelper(int arr[], int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+        mergeSortHelper(arr, left, mid);
+        mergeSortHelper(arr, mid + 1, right);
+        merge(arr, left, mid, right);
+    }
+}
+
+void merge_sort(int arr[], int length) {
+    mergeSortHelper(arr, 0, length - 1);
+}
+
+
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];
+    int i = low - 1;
+
+    for (int j = low; j < high; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+
+    int temp = arr[i + 1];
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
+
+    return i + 1;
+}
+
+void quickSortHelper(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        quickSortHelper(arr, low, pi - 1);
+        quickSortHelper(arr, pi + 1, high);
+    }
+}
+
+void quick_sort(int arr[], int length) {
+    quickSortHelper(arr, 0, length - 1);
+}
+
+
 void display(int arr[], int length) {
     for (int i = 0; i < length; i++) {
         cout << arr[i] << " ";
@@ -86,6 +160,9 @@ int main() {
         cout << " 1. Bubble sort\n";
         cout << " 2. Selection sort\n";
         cout << " 3. Insertion sort\n";
+        cout << " 4. Merge sort\n";
+        cout << " 5. Quick sort\n";
+        cout << " 6. Exit\n";
 
         cout << "Enter your choice: ";
         cin >> choice;
@@ -95,7 +172,9 @@ int main() {
             case 1: bubble_sort(arr, length); break;
             case 2: selection_sort(arr, length); break;
             case 3: insertion_sort(arr, length); break;
-            case 4: cout << "Exiting....."; break;
+            case 4: merge_sort(arr, length); break ; 
+            case 5: quick_sort(arr,length); break ;
+            case 6: cout << "Exiting....."; break;
             default: cout << "Invalid input!";
         }
 
